@@ -1,0 +1,32 @@
+# Touchline AI: API (serves UI) + background worker sharing a data volume (SQLite + artifact cache).
+# Local:  docker compose up --build          -> http://localhost:8000
+# AWS:    deploy/aws/deploy.sh writes .env with TOUCHLINE_STORAGE=s3 and runs this file on EC2.
+services:
+  api:
+    build: .
+    image: touchline-ai:1.0.0
+    env_file: [{path: .env, required: false}]
+    environment:
+      TOUCHLINE_WORKER_MODE: external
+    ports: ["${TOUCHLINE_BIND:-127.0.0.1}:${TOUCHLINE_PORT:-8000}:8000"]
+    volumes: [touchline-data:/data]
+    restart: unless-stopped
+    logging: {driver: json-file, options: {max-size: "10m", max-file: "5"}}
+  worker:
+    image: touchline-ai:1.0.0
+    depends_on: [api]
+    env_file: [{path: .env, required: false}]
+    environment:
+      TOUCHLINE_WORKER_MODE: external
+    command: ["python", "-m", "touchline.worker"]
+    volumes: [touchline-data:/data]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import touchline.worker"]
+      interval: 60s
+    deploy:
+      resources:
+        limits: {cpus: "${TOUCHLINE_WORKER_CPUS:-3.5}", memory: 6g}
+    logging: {driver: json-file, options: {max-size: "10m", max-file: "5"}}
+volumes:
+  touchline-data:

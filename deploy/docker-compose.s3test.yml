@@ -1,0 +1,24 @@
+# Local verification of the S3 storage path: moto S3 emulator + the production compose services.
+#   docker compose -f docker-compose.yml -f deploy/docker-compose.s3test.yml up -d --build
+services:
+  s3:
+    image: motoserver/moto:5.1.4
+    ports: ["127.0.0.1:5005:5000"]
+  s3init:
+    image: touchline-ai:1.0.0
+    depends_on: [s3]
+    user: root
+    entrypoint: ["python", "-c", "import boto3,time;time.sleep(3);c=boto3.client('s3',endpoint_url='http://s3:5000',region_name='us-east-1',aws_access_key_id='test',aws_secret_access_key='test');c.create_bucket(Bucket='touchline-local');print('bucket ok')"]
+  api:
+    environment: &s3env
+      TOUCHLINE_STORAGE: s3
+      TOUCHLINE_S3_BUCKET: touchline-local
+      TOUCHLINE_S3_ENDPOINT: http://s3:5000
+      TOUCHLINE_API_TOKEN: localtest-token
+      TOUCHLINE_WORKER_MODE: external
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: us-east-1
+    depends_on: [s3init]
+  worker:
+    environment: *s3env

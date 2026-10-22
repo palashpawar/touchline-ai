@@ -1,0 +1,12 @@
+.venv/
+var/
+node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+eval/out/
+models/*.onnx
+data/clips/
+eval/out_run*.log
+.claude/

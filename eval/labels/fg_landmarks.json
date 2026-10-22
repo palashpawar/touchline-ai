@@ -1,0 +1,41 @@
+{
+  "clip": "data/clips/france_germany_2018_phase1_ccbysa.ogv",
+  "annotator": "Claude (assistant), by visual inspection of 1.75x zoomed crops with a 20 px / 10 px grid; not verified by a human",
+  "uncertainty_px": "approx. +/-4 px for line corners, +/-6 px for goal-post bases",
+  "pitch_frame": "x from the left goal line, y from the far touchline (105 x 68 m)",
+  "calibration": {
+    "frame": 0,
+    "points": [
+      {"name": "left_goal_area_near_goalline", "image": [520, 836], "pitch": [0, 43.16]},
+      {"name": "left_goal_area_near_front", "image": [640, 811], "pitch": [5.5, 43.16]},
+      {"name": "left_penalty_area_near_front", "image": [1190, 795], "pitch": [16.5, 54.16]},
+      {"name": "left_penalty_area_near_goalline", "image": [928, 873], "pitch": [0, 54.16]}
+    ],
+    "holdout": [
+      {"name": "left_goal_near_post", "image": [320, 833], "pitch": [0, 37.66]},
+      {"name": "left_goal_far_post", "image": [95, 818], "pitch": [0, 30.34]}
+    ]
+  },
+  "moved_frames": {
+    "150": [
+      {"name": "left_goal_area_near_goalline", "image": [594, 877], "pitch": [0, 43.16]},
+      {"name": "left_goal_area_near_front", "image": [711, 850], "pitch": [5.5, 43.16]},
+      {"name": "left_penalty_area_near_front", "image": [1267, 833], "pitch": [16.5, 54.16]},
+      {"name": "left_penalty_area_near_goalline", "image": [1004, 913], "pitch": [0, 54.16]},
+      {"name": "left_goal_near_post", "image": [400, 866], "pitch": [0, 37.66]}
+    ],
+    "300": [
+      {"name": "left_goal_area_near_goalline", "image": [594, 883], "pitch": [0, 43.16]},
+      {"name": "left_goal_area_near_front", "image": [751, 859], "pitch": [5.5, 43.16]},
+      {"name": "left_penalty_area_near_front", "image": [1307, 845], "pitch": [16.5, 54.16]},
+      {"name": "left_penalty_area_near_goalline", "image": [1047, 923], "pitch": [0, 54.16]},
+      {"name": "left_goal_near_post", "image": [440, 871], "pitch": [0, 37.66]}
+    ],
+    "450": [
+      {"name": "left_goal_area_near_goalline", "image": [520, 883], "pitch": [0, 43.16]},
+      {"name": "left_goal_area_near_front", "image": [631, 860], "pitch": [5.5, 43.16]},
+      {"name": "left_penalty_area_near_front", "image": [1187, 837], "pitch": [16.5, 54.16]},
+      {"name": "left_goal_near_post", "image": [314, 871], "pitch": [0, 37.66]}
+    ]
+  }
+}
