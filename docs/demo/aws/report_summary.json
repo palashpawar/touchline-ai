@@ -1,0 +1,222 @@
+{
+ "job": {
+  "id": "bcc98fcd4a44",
+  "filename": "france_germany_2018_phase1_ccbysa.ogv",
+  "created_at": "2026-10-23T04:58:30+00:00",
+  "meta": {
+   "fps": 30.0,
+   "width": 1920,
+   "height": 1080,
+   "frame_count": 508,
+   "duration_s": 16.933333333333334,
+   "codec": "theo",
+   "fps_source": "header"
+  }
+ },
+ "provenance": {
+  "opencv": "5.0.0",
+  "numpy": "2.5.4",
+  "python": "3.12.7",
+  "machine": "x86_64",
+  "platform": "Linux-6.18.54-121.166.amzn2023.x86_64-x86_64-with-glibc2.36",
+  "detector": {
+   "model": "YOLOX-S (OpenCV Zoo object_detection_yolox_2022nov.onnx)",
+   "sha256": "c5c2d13e59ae883e6af3b45daea64af4833a4951c92d116ec270d9ddbe998063",
+   "license": "Apache-2.0",
+   "runtime": "cv2.dnn"
+  },
+  "agent": "rule-based state machine (no LLM in the control path)",
+  "processing_seconds": 586.9
+ },
+ "segments": [
+  {
+   "segment_id": "seg1",
+   "status": "recovered",
+   "attempts": 1,
+   "comparisons": [
+    {
+     "attempt": 1,
+     "action": "camera_motion_update",
+     "before": "seg1.a0.611101",
+     "after": "seg1.a1.3ec2ab",
+     "accepted": true,
+     "reason": "Improved line_alignment; no target or guard signal degraded.",
+     "signals": {
+      "line_alignment": {
+       "before": 0.449784086536406,
+       "after": 0.8937531151354046,
+       "relative_improvement": 0.9870714458081727,
+       "after_breaches_threshold": false
+      },
+      "out_of_pitch_fraction": {
+       "before": 0.002277904328018223,
+       "after": 0.002277904328018223,
+       "relative_improvement": 0.0,
+       "after_breaches_threshold": false
+      }
+     },
+     "improved": [
+      "line_alignment"
+     ],
+     "worsened": [],
+     "guard_failures": [],
+     "evaluation_frames": 21
+    }
+   ]
+  },
+  {
+   "segment_id": "seg2",
+   "status": "recovered",
+   "attempts": 1,
+   "comparisons": [
+    {
+     "attempt": 1,
+     "action": "camera_motion_update",
+     "before": "seg2.a0.62899f",
+     "after": "seg2.a1.5bd356",
+     "accepted": true,
+     "reason": "Improved line_alignment, out_of_pitch_fraction; no target or guard signal degraded.",
+     "signals": {
+      "line_alignment": {
+       "before": 0.19747570132203235,
+       "after": 0.8215270236404645,
+       "relative_improvement": 3.1601423270844045,
+       "after_breaches_threshold": false
+      },
+      "out_of_pitch_fraction": {
+       "before": 0.01891891891891892,
+       "after": 0.0,
+       "relative_improvement": 1.0,
+       "after_breaches_threshold": false
+      }
+     },
+     "improved": [
+      "line_alignment",
+      "out_of_pitch_fraction"
+     ],
+     "worsened": [],
+     "guard_failures": [],
+     "evaluation_frames": 21
+    }
+   ]
+  },
+  {
+   "segment_id": "seg3",
+   "status": "recovered",
+   "attempts": 1,
+   "comparisons": [
+    {
+     "attempt": 1,
+     "action": "camera_motion_update",
+     "before": "seg3.a0.799f41",
+     "after": "seg3.a1.b6430d",
+     "accepted": true,
+     "reason": "Improved line_alignment, out_of_pitch_fraction; no target or guard signal degraded.",
+     "signals": {
+      "line_alignment": {
+       "before": 0.18449249951295538,
+       "after": 0.8039276206643775,
+       "relative_improvement": 3.3575084233054384,
+       "after_breaches_threshold": false
+      },
+      "out_of_pitch_fraction": {
+       "before": 0.006269592476489028,
+       "after": 0.0,
+       "relative_improvement": 1.0,
+       "after_breaches_threshold": false
+      }
+     },
+     "improved": [
+      "line_alignment",
+      "out_of_pitch_fraction"
+     ],
+     "worsened": [],
+     "guard_failures": [],
+     "evaluation_frames": 21
+    }
+   ]
+  },
+  {
+   "segment_id": "seg4",
+   "status": "recovered",
+   "attempts": 1,
+   "comparisons": [
+    {
+     "attempt": 1,
+     "action": "camera_motion_update",
+     "before": "seg4.a0.502a53",
+     "after": "seg4.a1.434468",
+     "accepted": true,
+     "reason": "Improved line_alignment, out_of_pitch_fraction; no target or guard signal degraded.",
+     "signals": {
+      "line_alignment": {
+       "before": 0.20790373511668375,
+       "after": 0.8323654897852573,
+       "relative_improvement": 3.003610080973779,
+       "after_breaches_threshold": false
+      },
+      "out_of_pitch_fraction": {
+       "before": 0.018957345971563982,
+       "after": 0.0,
+       "relative_improvement": 1.0,
+       "after_breaches_threshold": false
+      }
+     },
+     "improved": [
+      "line_alignment",
+      "out_of_pitch_fraction"
+     ],
+     "worsened": [],
+     "guard_failures": [],
+     "evaluation_frames": 26
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "initial": {
+   "A": {
+    "available": true,
+    "width_m_median": 30.49039249940537,
+    "depth_m_median": 33.64944434815013,
+    "visible_players_median": 9.0,
+    "extrapolated_share_median": 0.0,
+    "frames": 87,
+    "reason": null
+   },
+   "B": {
+    "available": true,
+    "width_m_median": 34.83219651682411,
+    "depth_m_median": 23.276772149136423,
+    "visible_players_median": 9.0,
+    "extrapolated_share_median": 0.0,
+    "frames": 85,
+    "reason": null
+   },
+   "tracks": 64,
+   "tracks_ge_2s": 48
+  },
+  "final": {
+   "A": {
+    "available": true,
+    "width_m_median": 32.53249071093189,
+    "depth_m_median": 29.154999240129992,
+    "visible_players_median": 8.0,
+    "extrapolated_share_median": 0.2857142857142857,
+    "frames": 85,
+    "reason": null
+   },
+   "B": {
+    "available": true,
+    "width_m_median": 41.865999054955005,
+    "depth_m_median": 31.104508688510975,
+    "visible_players_median": 9.0,
+    "extrapolated_share_median": 0.5,
+    "frames": 85,
+    "reason": null
+   },
+   "tracks": 69,
+   "tracks_ge_2s": 50
+  }
+ }
+}

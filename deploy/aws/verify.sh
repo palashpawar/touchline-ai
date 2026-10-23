@@ -10,7 +10,13 @@ export AWS_REGION AWS_PAGER=""
 TOKEN=$(aws ssm get-parameter --name "$PARAM" --with-decryption --query Parameter.Value --output text)
 BASE="http://$PUBLIC_IP"
 echo "==> waiting for $BASE/api/health"
-for i in $(seq 1 60); do curl -sf "$BASE/api/health" && break; sleep 10; done; echo
+ok=0
+for i in $(seq 1 60); do curl -sf -m 8 "$BASE/api/health" && { ok=1; break; }; sleep 10; done; echo
+if [ "$ok" != 1 ]; then
+  echo "health check never succeeded. If your public IP changed, run deploy/aws/allow-my-ip.sh $STACK;"
+  echo "otherwise inspect: aws ec2 get-console-output --instance-id $INSTANCE_ID --latest --output text"
+  exit 1
+fi
 echo "==> unauthenticated request must be rejected"
 code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/jobs"); [ "$code" = 401 ] && echo "401 ok" || { echo "expected 401, got $code"; exit 1; }
 OUT=eval/out/aws_smoke scripts/smoke_e2e.sh "$BASE" data/clips/france_germany_2018_phase1_ccbysa.ogv "$TOKEN"

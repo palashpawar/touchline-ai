@@ -161,7 +161,7 @@ initial and corrected runs, because drift in this segment is small (≤54 px) an
 
 **Processing time:** natural 16.9 s clip, agent stage 125 s (0.70 s per analysed frame, including reruns and motion
 estimation). The full HTTP run in Docker (linux/arm64, worker capped at 3.5 CPUs), including rendering two annotated videos, took 281 s. Detection is about 0.2 s per
-1080p frame (3–4 tiles). EC2 timing is **not measured**.
+1080p frame (3–4 tiles). On AWS (`m7i-flex.large`, 2 vCPU, x86_64), the same full run took **587 s**, with the agent making identical decisions (all four segments recovered).
 
 ## 8. Failure cases
 
@@ -198,7 +198,7 @@ estimation). The full HTTP run in Docker (linux/arm64, worker capped at 3.5 CPUs
 * **Not implemented:** ball tracking, possession, passing, speed and distance. The UI lists these as unavailable.
 * **Spectator filtering** relies on a grass mask. Photographers kneeling on the grass edge can pass the foot-on-grass test; most
   are removed later by the off-pitch projection test.
-* **Throughput:** about 0.37 s per analysed 1080p frame on an Apple M3 CPU. EC2 performance is unmeasured because the deployment was not run.
+* **Throughput:** about 0.37 s per analysed 1080p frame on an Apple M3 CPU; a 17 s clip takes ~10 min end to end on the 2-vCPU free-tier EC2 instance. A larger CPU instance or GPU DNN backend would be needed for faster turnaround.
 * Thresholds were tuned on one natural clip plus synthetic stress tests. They are not validated across venues.
 
 ## Responsible use

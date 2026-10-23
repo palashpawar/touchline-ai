@@ -3,22 +3,22 @@
 Status key: **Verified** = run and observed in this environment · **Implemented, unverified** = code/scripts exist but were not
 executed end-to-end here · **Incomplete** = not done.
 
-Environment used for verification: Apple M3 (arm64), macOS, Python 3.12, Node 23.11, Docker Desktop 29.3 (linux/arm64 containers).
+Environments used for verification: Apple M3 (arm64), macOS, Python 3.12, Node 23.11, Docker Desktop 29.3 (linux/arm64 containers); AWS EC2 `m7i-flex.large` (x86_64, Amazon Linux 2023) in us-east-2 with S3.
 
 | Requirement | Status | Evidence |
 |---|---|---|
 | OpenCV 5 for substantive video analysis | **Verified** | Runtime `cv2.__version__ == "5.0.0"` (official `opencv-python-headless==5.0.0.93`, OpenCV release 5.0.0 tagged 2026-06-06). Docker build asserts `5.x`; every report records it (`provenance.opencv`). Operations listed in TECHNICAL_REPORT §3. No OpenCV 4 fallback is installed anywhere. |
-| Meaningful processing component on AWS (EC2 worker processing video, S3 artifacts) | **Implemented, unverified** | `deploy/aws/deploy.sh`, `user-data.sh.tpl`, `verify.sh`, `destroy.sh`. Not executed: no AWS credentials/CLI in this environment. The S3 code path was exercised against an S3 emulator (see below), not real S3. |
-| S3 storage behind the same interface as local | **Verified (emulator + moto unit test)** | `storage.py`; `tests/test_quality_and_storage.py::test_s3_storage_encrypts_and_uses_prefix`; full containerized run in S3 mode against a moto S3 emulator wrote 10 objects under `touchline/jobs/<id>/`, all `AES256` (`docs/demo/s3_listing_emulator.txt`) |
-| EC2 + Docker Compose | Compose **verified locally**; EC2 **unverified** | `docker compose` api + worker containers (linux/arm64): upload → agent → report in 281 s; 401 without token; team re-assignment task completed (`docs/demo/`) |
-| Least-privilege IAM scoped to bucket/prefix | **Implemented, unverified** | `deploy/aws/iam-policy.json.tpl` (objects under `touchline/*` only, ListBucket prefix-conditioned, one SSM parameter) + AWS-managed `AmazonSSMManagedInstanceCore` for Session Manager |
-| Instance roles, no embedded keys | **Implemented, unverified** | Instance profile + IMDSv2 (hop limit 2); `.env` contains no AWS keys |
-| S3 encryption + lifecycle cleanup; raw clips private | **Implemented, unverified** | SSE-S3 default + per-object `AES256`, public-access block, TLS-only bucket policy, 7-day expiry on `touchline/jobs/` |
+| Meaningful processing component on AWS (EC2 worker processing video, S3 artifacts) | **Verified** | `deploy/aws/verify.sh` against the deployed instance (2026-10-23, account 459374152024, us-east-2; `docs/demo/aws/`): upload → EC2 worker (Amazon Linux 2023, x86_64, OpenCV 5.0.0) analysed the clip from S3 in 586.9 s; all 4 segments recovered via camera-motion update; 10 artifacts written to S3 |
+| S3 storage behind the same interface as local | **Verified (real S3, emulator, moto unit test)** | `storage.py`; `tests/test_quality_and_storage.py::test_s3_storage_encrypts_and_uses_prefix`; full containerized run in S3 mode against a moto S3 emulator wrote 10 objects under `touchline/jobs/<id>/`, all `AES256` (`docs/demo/s3_listing_emulator.txt`) |
+| EC2 + Docker Compose | **Verified** | `m7i-flex.large` (free-plan account) built and started the api + worker compose stack via user data in ~85 s after boot; also verified locally on linux/arm64 |
+| Least-privilege IAM scoped to bucket/prefix | **Verified** | Inline role policy read back from IAM: objects under `touchline-459374152024-us-east-2/touchline/*`, prefix-conditioned ListBucket, one SSM parameter; plus AWS-managed `AmazonSSMManagedInstanceCore` |
+| Instance roles, no embedded keys | **Verified** | Instance profile `touchline-ec2-role`, IMDSv2 `required`; the worker wrote S3 with no AWS keys in `.env` |
+| S3 encryption + lifecycle cleanup; raw clips private | **Verified** | Read back: default SSE `AES256`, per-object `AES256`, all four public-access blocks on, anonymous GET of the uploaded clip → 403, lifecycle `touchline/jobs/` expires after 7 days |
 | Upload size and duration limits | **Verified** | Streaming 200 MB limit (413), 10–30 s by decoding, ≥640×360, extension whitelist; `tests/test_upload_api.py` |
 | Bounded worker concurrency | **Verified (local)** | `TOUCHLINE_WORKER_CONCURRENCY` threads claim tasks atomically; compose CPU limit |
-| No unauthenticated public processing endpoints | **Verified (local)** / AWS unverified | Token middleware (401 test); SG restricted to `ALLOWED_CIDR`, script refuses `0.0.0.0/0` |
+| No unauthenticated public processing endpoints | **Verified** | Deployed `/api/jobs` without token → 401; security group allows only port 80 from one /32 (`allow-my-ip.sh` swaps it); script refuses `0.0.0.0/0`. Plain HTTP: use TLS (ALB+ACM) beyond a demo |
 | Structured logs, health checks | **Verified** | JSON-lines logging; `/api/health`; Docker `HEALTHCHECK` |
-| Cleanup script | **Implemented, unverified** | `deploy/aws/destroy.sh` |
+| Cleanup script | **Implemented, not yet run** | `deploy/aws/destroy.sh` — run after recording the demo |
 | Agentic Vision: perception → decision → action, OpenCV outputs change the next tool call | **Verified** | Real trace `docs/demo/trace.jsonl` (containerized run); 8/9 eval cases chose the expected action; `test_decision_depends_on_signals_not_fixed_sequence`; eval cases choose different tools from different evidence (eval/RESULTS.md) |
 | Not a chatbot over fixed results | **Verified** | No LLM in control; state machine re-runs vision with changed configuration |
 | Explicit states INGEST…COMPLETE | **Verified** | `agent/trace.py::STATES`, trace |
@@ -45,4 +45,4 @@ Environment used for verification: Apple M3 (arm64), macOS, Python 3.12, Node 23
 | Demo script < 5 min | **Verified (written)** | `docs/DEMO_SCRIPT.md`; video not recorded |
 | Demonstration video recorded | **Incomplete** | Needs human recording |
 | Optional COOL path | Not pursued (by instruction) | — |
-| Submission (deadline 2026-10-26 23:59 PT) | **Incomplete** | Repository not pushed/submitted; AWS deployment must be run and verified with real credentials |
+| Submission (deadline 2026-10-26 23:59 PT) | **Incomplete** | Public repo github.com/palashpawar/touchline-ai; demo video and submission form still to do |

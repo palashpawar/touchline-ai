@@ -115,9 +115,17 @@ deploy/aws/verify.sh
 DELETE_BUCKET=1 deploy/aws/destroy.sh
 ```
 
+Account notes from the real deployment:
+- **Region-restricted organization accounts:** if an Organizations SCP denies EC2 outside one region, set `AWS_REGION` to the
+  allowed region (ours was `us-east-2`).
+- **Free-plan accounts:** only free-tier instance types launch; use `INSTANCE_TYPE=m7i-flex.large` (2 vCPU, 8 GB).
+- **Your IP changed** (hotspot, campus Wi-Fi)? Run `deploy/aws/allow-my-ip.sh` to swap the security-group source to your
+  current address.
+
 `verify.sh` tests the deployed endpoint for real: health, a 401 check without the token, the full upload→report smoke
-test, and an S3 listing of the artifacts the EC2 worker wrote. **Status: the AWS deployment has not been run or verified
-from this environment (no AWS credentials or CLI available).** See [docs/COMPLIANCE.md](docs/COMPLIANCE.md).
+test, and an S3 listing of the artifacts the EC2 worker wrote. **Status: deployed and verified on 2026-10-23** (us-east-2, `m7i-flex.large`):
+the EC2 worker processed the demo clip from S3 in 587 s and wrote all artifacts back to S3; evidence in
+[docs/demo/aws/](docs/demo/aws/) and [docs/COMPLIANCE.md](docs/COMPLIANCE.md).
 
 The endpoint is plain HTTP restricted to your IP. For anything beyond a demo, put it behind TLS (ALB + ACM) or use SSM port
 forwarding.

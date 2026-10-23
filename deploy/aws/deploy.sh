@@ -10,6 +10,7 @@
 #   export AWS_REGION=us-east-1 ALLOWED_CIDR=$(curl -s https://checkip.amazonaws.com)/32
 #   deploy/aws/deploy.sh
 # Optional: STACK=touchline INSTANCE_TYPE=c7i.xlarge BUCKET=<name> RETENTION_DAYS=7
+# Free-plan accounts only allow free-tier types: use INSTANCE_TYPE=m7i-flex.large (2 vCPU, 8 GB).
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 
@@ -69,7 +70,7 @@ aws iam put-role-policy --role-name "$ROLE" --policy-name "${STACK}-app" --polic
 
 log "Application bundle -> s3://$BUCKET/${PREFIX}deploy/"
 BUNDLE=/tmp/${STACK}-bundle.tgz
-tar --exclude=.venv --exclude=var --exclude=eval/out --exclude=data --exclude='**/node_modules' \
+tar --exclude=.venv --exclude=var --exclude=eval/out --exclude=data --exclude=node_modules \
     --exclude=frontend/dist --exclude=.git --exclude='*.log' -czf "$BUNDLE" \
     Dockerfile docker-compose.yml .dockerignore backend frontend models scripts
 aws s3 cp "$BUNDLE" "s3://$BUCKET/${PREFIX}deploy/bundle.tgz" --sse AES256 >/dev/null
