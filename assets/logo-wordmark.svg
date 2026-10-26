@@ -14,5 +14,5 @@
     </g>
   </g>
   <text x="330" y="190" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="118" font-weight="600" fill="#e6edf7" letter-spacing="-2">Touchline <tspan fill="#22c55e" font-weight="800">AI</tspan></text>
-  <text x="334" y="250" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="34" fill="#8ea0bd">Match-clip analysis that checks its own work</text>
+  <text x="334" y="250" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="34" fill="#8ea0bd">Analysis that knows when it&#8217;s wrong.</text>
 </svg>
