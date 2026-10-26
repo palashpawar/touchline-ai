@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { api, AppConfig, CalibrationReport, frameUrl, Job } from "./api";
+import { api, AppConfig, CalibrationReport, DEMO, frameUrl, Job } from "./api";
 import { projectTemplate } from "./geometry";
 import { MiniPitch } from "./Pitch";
 
@@ -104,7 +104,7 @@ export function Calibrate({ job, config, onDone }: { job: Job; config: AppConfig
     <div className="calib">
       <div className="calib-stage card">
         <div className="calib-toolbar">
-          <label>Frame <input type="range" min={0} max={meta.frame_count - 1} value={frame}
+          <label>Frame <input type="range" min={0} max={meta.frame_count - 1} value={frame} disabled={DEMO}
             onChange={(e) => { setFrame(+e.target.value); setReport(null); }} />
             <span className="mono">{frame} · {(frame / meta.fps).toFixed(2)} s</span></label>
           <label className="chk"><input type="checkbox" checked={snap} onChange={(e) => setSnap(e.target.checked)} /> Snap to detected line corners</label>

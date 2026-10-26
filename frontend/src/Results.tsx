@@ -154,8 +154,8 @@ export function Results({ job, report, reviews, config, onAction, onRecalibrate 
       <section className="card">
         <div className="card-head"><h3>Export</h3></div>
         <div className="row wrap">
-          <a className="btn" href={`/api/jobs/${job.id}/artifacts/report.json?download=true`}>Report (JSON)</a>
-          <a className="btn" href={`/api/jobs/${job.id}/artifacts/trace.jsonl?download=true`}>Agent trace (JSONL)</a>
+          <a className="btn" href={artifactUrl(job.id, "report.json", job.run_no, true)} download>Report (JSON)</a>
+          <a className="btn" href={artifactUrl(job.id, "trace.jsonl", job.run_no, true)} download>Agent trace (JSONL)</a>
           <a className="btn" href={artifactUrl(job.id, report.artifacts.annotated_final, job.run_no, true)}>Corrected video</a>
           <a className="btn ghost" href={artifactUrl(job.id, report.artifacts.annotated_initial, job.run_no, true)}>Initial video</a>
         </div>

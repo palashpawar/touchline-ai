@@ -74,7 +74,24 @@ export type AppConfig = {
   signals: SignalSpec[];
 };
 
-let token = sessionStorage.getItem("touchline_token") ?? "";
+/** Static, read-only build for GitHub Pages: serves one recorded run from /demo/ instead of the API. */
+export const DEMO = import.meta.env.VITE_DEMO === "1";
+const BASE = import.meta.env.BASE_URL;
+const demoFile = (name: string) => `${BASE}demo/${name}`;
+const DEMO_MSG = "This is a read-only demo of a recorded run. Run the app locally or deploy it to upload and analyse clips.";
+
+async function demoJson<T>(name: string): Promise<T> {
+  const r = await fetch(demoFile(name));
+  if (!r.ok) throw new ApiError(r.status, `Demo data missing: ${name}`);
+  return r.json() as Promise<T>;
+}
+
+let token = "";
+try {
+  token = sessionStorage.getItem("touchline_token") ?? "";
+} catch {
+  /* storage may be unavailable */
+}
 export const setToken = (t: string) => {
   token = t;
   try {
@@ -115,7 +132,7 @@ const json = (body: unknown): RequestInit => ({
   body: JSON.stringify(body),
 });
 
-export const api = {
+const liveApi = {
   health: () => req<any>("/api/health"),
   config: () => req<AppConfig>("/api/config"),
   login: (t: string) => req<any>("/api/auth", json({ token: t })),
@@ -151,6 +168,25 @@ export const api = {
   report: (id: string) => req<any>(`/api/jobs/${id}/report`),
 };
 
-export const frameUrl = (id: string, i: number) => `/api/jobs/${id}/frame/${i}`;
+const readOnly = () => Promise.reject(new ApiError(403, DEMO_MSG));
+const demoApi: typeof liveApi = {
+  health: () => demoJson("health.json"),
+  config: () => demoJson<AppConfig>("config.json"),
+  login: () => Promise.resolve({ ok: true }),
+  jobs: async () => [await demoJson<Job>("job.json")],
+  job: () => demoJson<Job>("job.json"),
+  upload: () => readOnly(),
+  lines: () => Promise.resolve({ segments: [] }),
+  calibrate: () => readOnly(),
+  analyze: () => readOnly(),
+  trace: () => demoJson<AgentStep[]>("trace.json"),
+  reviews: () => Promise.resolve([]),
+  review: () => readOnly(),
+  report: () => demoJson("report.json"),
+};
+
+export const api = DEMO ? demoApi : liveApi;
+
+export const frameUrl = (id: string, i: number) => (DEMO ? demoFile("frame0.jpg") : `/api/jobs/${id}/frame/${i}`);
 export const artifactUrl = (id: string, name: string, run: number, download = false) =>
-  `/api/jobs/${id}/artifacts/${name}?run=${run}${download ? "&download=true" : ""}`;
+  DEMO ? demoFile(name) : `/api/jobs/${id}/artifacts/${name}?run=${run}${download ? "&download=true" : ""}`;

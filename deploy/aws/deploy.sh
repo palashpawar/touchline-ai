@@ -71,7 +71,7 @@ aws iam put-role-policy --role-name "$ROLE" --policy-name "${STACK}-app" --polic
 log "Application bundle -> s3://$BUCKET/${PREFIX}deploy/"
 BUNDLE=/tmp/${STACK}-bundle.tgz
 tar --exclude=.venv --exclude=var --exclude=eval/out --exclude=data --exclude=node_modules \
-    --exclude=frontend/dist --exclude=.git --exclude='*.log' -czf "$BUNDLE" \
+    --exclude=frontend/dist --exclude=frontend/dist-demo --exclude=frontend/demo-public --exclude=.git --exclude='*.log' -czf "$BUNDLE" \
     Dockerfile docker-compose.yml .dockerignore backend frontend models scripts
 aws s3 cp "$BUNDLE" "s3://$BUCKET/${PREFIX}deploy/bundle.tgz" --sse AES256 >/dev/null
 

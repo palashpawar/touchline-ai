@@ -11,3 +11,5 @@ data/clips/
 eval/out_run*.log
 .claude/
 deploy/aws/.state-*.env
+frontend/dist-demo/
+frontend/tsconfig.tsbuildinfo

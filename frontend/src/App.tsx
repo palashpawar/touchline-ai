@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { AgentStep, api, ApiError, AppConfig, Job, Review, setToken } from "./api";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AgentStep, api, ApiError, AppConfig, DEMO, Job, Review, setToken } from "./api";
 import { Calibrate } from "./Calibrate";
 import { Results } from "./Results";
 import { Timeline } from "./Timeline";
@@ -19,12 +19,15 @@ export default function App() {
   const [report, setReport] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
 
+  const openJobRef = useRef<((j: Job) => Promise<void>) | null>(null);
   const boot = useCallback(async () => {
     try {
       setHealth(await api.health());
       setConfig(await api.config());
-      setJobs(await api.jobs());
+      const js = await api.jobs();
+      setJobs(js);
       setNeedAuth(false);
+      if (DEMO && js[0]) await openJobRef.current?.(js[0]);
     } catch (e) {
       if (e instanceof ApiError && e.status === 401) setNeedAuth(true);
       else setErr((e as Error).message);
@@ -41,6 +44,7 @@ export default function App() {
     }
     setStep(j.run_no > 0 ? (RUNNING.has(j.status) ? "analyze" : "results") : j.calibration?.valid ? "analyze" : "calibrate");
   }, []);
+  openJobRef.current = openJob;
 
   // Poll while a task is running: job status, live agent steps, then the report once finished.
   useEffect(() => {
@@ -85,6 +89,13 @@ export default function App() {
         </div>
       </header>
 
+      {DEMO && (
+        <div className="demo-banner">
+          <b>Live demo · recorded run.</b> This is a real analysis processed on AWS (EC2 + S3,
+          OpenCV {health?.opencv}) of a CC BY-SA clip. Explore every step; uploading and re-running are disabled here.
+          <a href="https://github.com/palashpawar/touchline-ai" target="_blank" rel="noreferrer">Run it yourself →</a>
+        </div>
+      )}
       {err && <div className="alert error banner" onClick={() => setErr(null)}>{err} <span className="muted">(dismiss)</span></div>}
 
       <main>
@@ -148,7 +159,12 @@ function Upload({ config, jobs, onJob, onOpen }: { config: AppConfig; jobs: Job[
         <p className="muted">Upload a {lim.min_duration_s}–{lim.max_duration_s} s clip, calibrate a known pitch rectangle, and
           watch the agent check its own tracking and camera geometry — re-running segments when the evidence says the first pass is unreliable.</p>
       </section>
-      <label className={`dropzone ${over ? "over" : ""}`} onDragOver={(e) => { e.preventDefault(); setOver(true); }}
+      {DEMO ? (
+        <div className="dropzone demo">
+          <div><b>Uploads are disabled in this demo.</b></div>
+          <div className="small muted">Open the recorded run below, or clone the repo to analyse your own clips.</div>
+        </div>
+      ) : <label className={`dropzone ${over ? "over" : ""}`} onDragOver={(e) => { e.preventDefault(); setOver(true); }}
         onDragLeave={() => setOver(false)} onDrop={(e) => { e.preventDefault(); setOver(false); const f = e.dataTransfer.files[0]; if (f) send(f); }}>
         <input type="file" accept={lim.allowed_ext.join(",")} onChange={(e) => e.target.files?.[0] && send(e.target.files[0])} hidden />
         {prog === null ? <>
@@ -159,7 +175,7 @@ function Upload({ config, jobs, onJob, onOpen }: { config: AppConfig; jobs: Job[
           <div>{prog < 1 ? `Uploading… ${(prog * 100).toFixed(0)}%` : "Validating video (decoding all frames)…"}</div>
           <div className="bar"><div style={{ width: `${prog * 100}%` }} /></div>
         </>}
-      </label>
+      </label>}
       {err && <div className="alert error">{err}</div>}
       {jobs.length > 0 && (
         <section className="card">
@@ -209,7 +225,7 @@ function Analyze({ job, trace, onJob, onRecalibrate }: { job: Job; trace: AgentS
         </div>
         {useColors && <div className="row"><label>Team A <input type="color" value={a} onChange={(e) => setA(e.target.value)} /></label>
           <label>Team B <input type="color" value={b} onChange={(e) => setB(e.target.value)} /></label></div>}
-        <button className="primary big" disabled={running || !c?.valid} onClick={start}>{running ? "Running…" : job.run_no ? "Run analysis again" : "Run analysis"}</button>
+        <button className="primary big" disabled={DEMO || running || !c?.valid} onClick={start}>{running ? "Running…" : job.run_no ? "Run analysis again" : "Run analysis"}</button>
         {err && <div className="alert error">{err}</div>}
         {(running || job.progress > 0) && (
           <div className="progress">

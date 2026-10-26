@@ -202,3 +202,8 @@ table.qtable { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .calib-side, .calib-side .card { min-width: 0; }
 .form-grid > label { min-width: 0; }
 .form-grid select, .form-grid input, .calib-side select { width: 100%; min-width: 0; text-overflow: ellipsis; }
+
+.demo-banner { margin: 12px 0 0; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.5;
+  background: rgba(34, 197, 94, .1); border: 1px solid rgba(34, 197, 94, .35); color: #d1fae5; }
+.demo-banner a { margin-left: 8px; font-weight: 600; white-space: nowrap; }
+.dropzone.demo { cursor: default; }
