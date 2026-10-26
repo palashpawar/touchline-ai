@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo-wordmark.png" alt="Touchline AI" width="560"></p>
+
 # Touchline AI
 
 Turns a short soccer clip into tactical analysis for coaches, and tells you when not to trust it.

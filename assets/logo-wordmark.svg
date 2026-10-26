@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 320" role="img" aria-label="Touchline AI">
+  <rect width="1240" height="320" rx="40" fill="#0a1120"/>
+  <g transform="translate(32 32) scale(0.5)">
+    <defs>
+      <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f8a4c"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+    </defs>
+    <path d="M150 176 H362 L430 360 H82 Z" fill="url(#g2)"/>
+    <g fill="none" stroke="#f1f5f9" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M150 176 H362 L430 360 H82 Z"/><path d="M256 176 V360"/><ellipse cx="256" cy="262" rx="46" ry="26"/>
+    </g>
+    <circle cx="256" cy="262" r="7" fill="#f1f5f9"/>
+    <g fill="none" stroke="#4ade80" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M70 150 V104 H116"/><path d="M396 104 H442 V150"/><path d="M442 362 V408 H396"/><path d="M116 408 H70 V362"/>
+    </g>
+  </g>
+  <text x="330" y="190" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="118" font-weight="600" fill="#e6edf7" letter-spacing="-2">Touchline <tspan fill="#22c55e" font-weight="800">AI</tspan></text>
+  <text x="334" y="250" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="34" fill="#8ea0bd">Match-clip analysis that checks its own work</text>
+</svg>
