@@ -166,7 +166,8 @@ function Upload({ config, jobs, onJob, onOpen }: { config: AppConfig; jobs: Job[
         </div>
       ) : <label className={`dropzone ${over ? "over" : ""}`} onDragOver={(e) => { e.preventDefault(); setOver(true); }}
         onDragLeave={() => setOver(false)} onDrop={(e) => { e.preventDefault(); setOver(false); const f = e.dataTransfer.files[0]; if (f) send(f); }}>
-        <input type="file" accept={lim.allowed_ext.join(",")} onChange={(e) => e.target.files?.[0] && send(e.target.files[0])} hidden />
+        <input type="file" accept={lim.allowed_ext.join(",")} hidden
+          onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) send(f); }} />
         {prog === null ? <>
           <div className="dz-icon">⬆</div>
           <div><b>Drop a clip</b> or click to choose</div>
