@@ -8,6 +8,8 @@ An agent checks its own video analysis every few seconds. If something looks wro
 up), it changes its approach, reruns that part, and keeps the fix only if it measurably helps. If it can't fix it, it
 marks that part uncertain and asks you.
 
+**[▶ Try the live demo](https://palashpawar.github.io/touchline-ai/)**: a real recorded run processed on AWS, no install needed.
+
 Built with **OpenCV 5.0.0**, FastAPI, React, and AWS (EC2 + S3). The agent is rule-based; no LLM or paid API is involved.
 
 ## Results
