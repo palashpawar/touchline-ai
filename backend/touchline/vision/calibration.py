@@ -86,6 +86,10 @@ def quad_problems(q: np.ndarray, name: str, min_side: float, min_area: float) ->
     if q.shape != (4, 2) or not np.all(np.isfinite(q)):
         return [f"{name}: exactly four finite points are required"]
     d = np.linalg.norm(q[:, None] - q[None], axis=2)[np.triu_indices(4, 1)]
+    # Crossed edges mean the points were clicked out of order. Report that alone: a bow-tie also has a tiny
+    # signed area, and an "area too small" message would hide the real, easily fixed cause.
+    if d.min() >= min_side and (_segments_cross(q[0], q[1], q[2], q[3]) or _segments_cross(q[1], q[2], q[3], q[0])):
+        return [f"{name}: edges cross (points are out of order; click them in the order shown)"]
     if d.min() < min_side:
         errs.append(f"{name}: two points are only {d.min():.1f} apart (min {min_side})")
     area = abs(_signed_area(q))

@@ -36,6 +36,8 @@ def test_swapped_points_rejected_as_out_of_order():
     rep = cal.validate_calibration(bad, PIT, SHAPE)
     assert not rep.valid
     assert any("order" in e for e in rep.errors)
+    # the ordering problem is the only (and first) message, not a misleading "area too small"
+    assert not any("area" in e for e in rep.errors if e.startswith("image points"))
 
 
 def test_mirrored_order_rejected():

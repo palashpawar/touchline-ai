@@ -13,3 +13,7 @@ eval/out_run*.log
 deploy/aws/.state-*.env
 frontend/dist-demo/
 frontend/tsconfig.tsbuildinfo
+video/frames/
+video/build/
+video/audio/
+video/*.mp4
